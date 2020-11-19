@@ -1,0 +1,15 @@
+# Hashes of file build rules.
+10989f59cb89bd0adaa3424e4e401497 /home/luca/ros_wkspace_asgn0/devel/include/assignment0/TwoInt.h
+4d8e1e636913367994451e6781a84abf /home/luca/ros_wkspace_asgn0/devel/lib/python3/dist-packages/assignment0/msg/_TwoInt.py
+7d62613d77bcac02b70fe1454f211c81 /home/luca/ros_wkspace_asgn0/devel/lib/python3/dist-packages/assignment0/msg/__init__.py
+c620a8ce8ae6ff795a9eb4006edbff52 /home/luca/ros_wkspace_asgn0/devel/share/common-lisp/ros/assignment0/msg/TwoInt.lisp
+04affdeaf332d6691480a35ea86c18dd /home/luca/ros_wkspace_asgn0/devel/share/gennodejs/ros/assignment0/msg/TwoInt.js
+4abcbb66dd9c4aa7e04511728cef52d5 /home/luca/ros_wkspace_asgn0/devel/share/roseus/ros/assignment0/manifest.l
+54f102d7027fc5a8abff14bbb6507d7c /home/luca/ros_wkspace_asgn0/devel/share/roseus/ros/assignment0/msg/TwoInt.l
+89bcc3efee8938d88956b10b6186937e CMakeFiles/clean_test_results
+57d2ab097a97612a80badffa9bffdf4f assignment0/assignment0/CMakeFiles/_assignment0_generate_messages_check_deps_TwoInt
+6e9703666b28de41fad6b7c6d4cc2ee6 assignment0/assignment0/CMakeFiles/assignment0_generate_messages_cpp
+6e9703666b28de41fad6b7c6d4cc2ee6 assignment0/assignment0/CMakeFiles/assignment0_generate_messages_eus
+6e9703666b28de41fad6b7c6d4cc2ee6 assignment0/assignment0/CMakeFiles/assignment0_generate_messages_lisp
+6e9703666b28de41fad6b7c6d4cc2ee6 assignment0/assignment0/CMakeFiles/assignment0_generate_messages_nodejs
+6e9703666b28de41fad6b7c6d4cc2ee6 assignment0/assignment0/CMakeFiles/assignment0_generate_messages_py
