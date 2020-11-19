@@ -1,0 +1,8 @@
+prefix=/home/luca/ros_wkspace_asgn2/devel
+
+Name: cartesian_control
+Description: Description of cartesian_control
+Version: 0.0.0
+Cflags: -I/home/luca/ros_wkspace_asgn2/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime interactive_markers rospy sensor_msgs tf urdfdom_py geometry_msgs
