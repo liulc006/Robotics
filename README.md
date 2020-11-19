@@ -1,4 +1,5 @@
 # Robotics
 
-Projects from "Introduction to Robotics" at Columbia Univesity \n
-ROS Noetic
+Projects from "Introduction to Robotics" at Columbia Univesity
+
+(ROS Noetic)
