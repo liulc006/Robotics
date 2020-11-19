@@ -1,0 +1,8 @@
+prefix=/home/luca/ros_wkspace_asgn1/devel
+
+Name: marker_publisher
+Description: Description of marker_publisher
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp visualization_msgs

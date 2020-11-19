@@ -1,0 +1,2 @@
+assignment1/assignment1:assignment1/marker_publisher
+-DCATKIN_DEVEL_PREFIX=/home/luca/ros_wkspace_asgn1/devel -DCMAKE_INSTALL_PREFIX=/home/luca/ros_wkspace_asgn1/install -G Unix Makefiles
