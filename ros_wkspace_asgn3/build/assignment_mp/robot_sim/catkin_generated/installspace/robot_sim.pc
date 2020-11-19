@@ -1,0 +1,8 @@
+prefix=/home/luca/ros_wkspace_asgn3/install
+
+Name: robot_sim
+Description: Description of robot_sim
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lrobot_sim
+Requires: roscpp sensor_msgs trajectory_msgs urdf

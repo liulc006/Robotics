@@ -1,0 +1,8 @@
+prefix=/home/luca/ros_wkspace_asgn3/devel
+
+Name: urdfdom_py
+Description: Description of urdfdom_py
+Version: 0.3.3
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

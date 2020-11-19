@@ -1,0 +1,8 @@
+prefix=/home/luca/ros_wkspace_asgn3/devel
+
+Name: assignment_mp
+Description: Description of assignment_mp
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

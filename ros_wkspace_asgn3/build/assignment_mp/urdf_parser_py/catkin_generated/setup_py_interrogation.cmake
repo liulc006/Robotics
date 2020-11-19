@@ -1,0 +1,7 @@
+set(urdfdom_py_SETUP_PY_SETUP_MODULE "distutils.core")
+set(urdfdom_py_SETUP_PY_VERSION "0.3.3")
+set(urdfdom_py_SETUP_PY_SCRIPTS "")
+set(urdfdom_py_SETUP_PY_PACKAGES "urdf_parser_py")
+set(urdfdom_py_SETUP_PY_PACKAGE_DIRS "src/urdf_parser_py")
+set(urdfdom_py_SETUP_PY_MODULES "")
+set(urdfdom_py_SETUP_PY_MODULE_DIRS "")
