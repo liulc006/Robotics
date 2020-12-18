@@ -1,0 +1,2 @@
+set(state_estimator_MESSAGE_FILES "/home/luca/ros_wkspace_asgn4/src/state_estimator/msg/Landmark.msg;/home/luca/ros_wkspace_asgn4/src/state_estimator/msg/LandmarkReading.msg;/home/luca/ros_wkspace_asgn4/src/state_estimator/msg/LandmarkSet.msg;/home/luca/ros_wkspace_asgn4/src/state_estimator/msg/SensorData.msg;/home/luca/ros_wkspace_asgn4/src/state_estimator/msg/RobotPose.msg")
+set(state_estimator_SERVICE_FILES "")

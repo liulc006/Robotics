@@ -1,0 +1,2 @@
+state_estimator
+-DCATKIN_DEVEL_PREFIX=/home/luca/ros_wkspace_asgn4/devel -DCMAKE_INSTALL_PREFIX=/home/luca/ros_wkspace_asgn4/install -G Unix Makefiles

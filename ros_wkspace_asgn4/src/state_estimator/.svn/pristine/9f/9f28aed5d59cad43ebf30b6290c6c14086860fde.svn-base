@@ -1,0 +1,198 @@
+#!/usr/bin/env python3
+
+# Columbia Engineering
+# MECS 4602 - Fall 2018
+
+import math
+import numpy
+import time
+
+import rospy
+
+from state_estimator.msg import RobotPose
+from state_estimator.msg import SensorData
+
+class Estimator(object):
+    def __init__(self):
+
+        # Publisher to publish state estimate
+        self.pub_est = rospy.Publisher("/robot_pose_estimate", RobotPose, queue_size=1)
+
+        # Initial estimates for the state and the covariance matrix
+        self.x = numpy.zeros((3,1))
+        self.P = numpy.zeros((3,3))
+
+        # Covariance matrix for process (model) noise
+        self.V = numpy.zeros((3,3))
+        self.V[0,0] = 0.0025
+        self.V[1,1] = 0.0025
+        self.V[2,2] = 0.005
+
+        self.step_size = 0.01
+
+        # Subscribe to command input and sensory output of robot
+        rospy.Subscriber("/sensor_data", SensorData, self.sensor_callback)
+        
+    # This function gets called every time the robot publishes its control 
+    # input and sensory output. You must make use of what you know about 
+    # extended Kalman filters to come up with an estimate of the current
+    # state of the robot and covariance matrix.
+    # The SensorData message contains fields 'vel_trans' and 'vel_ang' for
+    # the commanded translational and rotational velocity respectively. 
+    # Furthermore, it contains a list 'readings' of the landmarks the
+    # robot can currently observe
+    def estimate(self, sens):
+
+        #### ----- YOUR CODE GOES HERE ----- ####
+        ####Prediction
+        u = numpy.array([[math.cos(float(self.x[2,0]))*sens.vel_trans],
+                         [math.sin(float(self.x[2,0]))*sens.vel_trans],
+                         [sens.vel_ang]])
+        F = numpy.eye(3)
+        T = [self.step_size,self.step_size,self.step_size]
+        G = numpy.eye(3) * T
+
+        x_hat = numpy.dot(F,self.x) + numpy.dot(G,u) #x_hat = F*x+G*u
+        P_hat = numpy.dot(numpy.dot(F,self.P),numpy.transpose(F)) + self.V #P_hat = F*P*F.T + V
+
+
+        #x_hat[0,0] = numpy.around(x_hat[0,0],1)
+        #x_hat[1,0] = numpy.around(x_hat[1,0],1)
+        #x_hat[2,0] = numpy.around(x_hat[2,0],4)
+
+        ####Update
+        if not sens.readings:
+            self.x = x_hat
+            self.P = P_hat
+        else:
+            y = []
+            h = []
+            x_l = []
+            y_l = []
+            W = []
+            for i in range(len(sens.readings)):
+                r = math.sqrt(((x_hat[0,0]-sens.readings[i].landmark.x)**2)+((x_hat[1,0]-sens.readings[i].landmark.y)**2))
+                b = math.atan2(sens.readings[i].landmark.y-x_hat[1,0], sens.readings[i].landmark.x-x_hat[0,0]) - x_hat[2,0]
+                
+                if r < 0.1:
+                    #print(r)
+                    print("small range")
+                    continue
+                #print(r)
+
+                if len(y) == 0:
+                    y=[[sens.readings[i].range],[sens.readings[i].bearing]]
+                    h = [[r],[b]]
+                    x_l = [[sens.readings[i].landmark.x]]
+                    y_l = [[sens.readings[i].landmark.y]]
+                    W = [[0.1],[0.05]]
+                else:
+                    y=numpy.vstack((y,[[sens.readings[i].range],[sens.readings[i].bearing]]))
+                    h = numpy.vstack((h,[[r],[b]]))
+                    x_l = numpy.vstack((x_l,sens.readings[i].landmark.x))
+                    y_l = numpy.vstack((y_l,sens.readings[i].landmark.y))
+                    W = numpy.vstack((W, [[0.1],[0.05]]))
+
+            #print(len(y))
+            x_l = numpy.array(x_l)
+            y_l = numpy.array(y_l)
+
+            eye = numpy.eye(len(W))
+            W = numpy.multiply(W,eye)
+
+
+            H = []
+            for i in range(int(len(y)/2)):
+                #Measurement H Jacobian matrix values
+
+                a = float((x_hat[0,0] - x_l[i])/math.sqrt(((x_hat[0,0] - x_l[i])**2)+((x_hat[1,0] - y_l[i])**2)))
+                b = float((x_hat[1,0] - y_l[i])/math.sqrt(((x_hat[0,0] - x_l[i])**2)+((x_hat[1,0] - y_l[i])**2)))
+                c = 0
+                e = float((-1*(y_l[i] - x_hat[1,0]))/(((x_l[i] - x_hat[0,0])**2)+((y_l[i] - x_hat[1,0])**2)))
+                f = float((x_l[i] - x_hat[0,0])/(((x_l[i] - x_hat[0,0])**2)+((y_l[i] - x_hat[1,0])**2)))
+                g = -1
+
+                if len(H) == 0:
+                    #print("empty")
+                    H = [[a,b,c],[e,f,g]]
+                else:
+                    H = numpy.vstack((H,[[a,b,c],[e,f,g]]))
+
+            y = numpy.array(y)
+            h = numpy.array(h)
+            H = numpy.array(H)
+            #H = numpy.around(H,3)
+
+            if len(y) == 0:
+                self.x = x_hat
+                self.P = P_hat
+            else:             
+                nu = y - h
+
+                for i in range(1,len(nu),2):
+                    while numpy.abs(nu[i,0]) > numpy.pi:#angle wraparound (-Pi and Pi)
+                        angle = nu[i,0]
+                        new_angle = angle % (2*numpy.pi)
+                        if new_angle > numpy.pi:
+                            new_angle = new_angle - (2*numpy.pi)
+                        nu[i,0] = new_angle
+
+
+                S = numpy.dot(numpy.dot(H,P_hat),numpy.transpose(H)) + W
+                inv_S = numpy.linalg.pinv(S,1e-2)
+                #inv_S = numpy.linalg.inv(S)
+                R = numpy.dot(numpy.dot(P_hat,numpy.transpose(H)),inv_S)
+                update = numpy.dot(R,nu)
+                
+                #self.x = x_hat + update
+                #self.P = P_hat - numpy.dot(numpy.dot(R,H),P_hat)
+                self.P = P_hat
+                self.x = x_hat
+                '''
+                print("======================")
+                print('x_l')
+                print(x_l)
+                print('y_l')
+                print(y_l)
+                print('H')
+                print(H)
+                print("======================")'''
+                
+                '''
+                print("======================")
+                print('xl')
+                print(x_l)
+                print('yl')
+                print(y_l)
+                print("H:")
+                print(H)
+                print("======================")'''
+                #print("======================")
+                #print('x')
+                #print(self.x)
+                #print("P")
+                #print(self.P)
+                #print("======================")
+        #### ----- YOUR CODE GOES HERE ----- ####
+    
+    def num_check(self,num):
+        if numpy.abs(num) > 0.1:
+            return num
+        else:
+            return 0
+    
+    def sensor_callback(self,sens):
+
+        # Publish state estimate 
+        self.estimate(sens)
+        est_msg = RobotPose()
+        est_msg.header.stamp = sens.header.stamp
+        est_msg.pose.x = self.x[0]
+        est_msg.pose.y = self.x[1]
+        est_msg.pose.theta = self.x[2]
+        self.pub_est.publish(est_msg)
+
+if __name__ == '__main__':
+    rospy.init_node('state_estimator', anonymous=True)
+    est = Estimator()
+    rospy.spin()

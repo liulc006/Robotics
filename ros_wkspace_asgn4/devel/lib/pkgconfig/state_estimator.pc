@@ -1,0 +1,8 @@
+prefix=/home/luca/ros_wkspace_asgn4/devel
+
+Name: state_estimator
+Description: Description of state_estimator
+Version: 0.0.0
+Cflags: -I/home/luca/ros_wkspace_asgn4/devel/include
+Libs: -L${prefix}/lib 
+Requires: rospy std_msgs message_runtime
