@@ -1,0 +1,19 @@
+from arm_dynamics_base import ArmDynamicsBase
+import numpy as np
+from geometry import rot, xaxis, yaxis
+
+class ArmDynamicsStudent(ArmDynamicsBase):
+
+    def dynamics_step(self, state, action, dt):
+        # state has the following format: [q_0, ..., q_(n-1), qdot_0, ..., qdot_(n-1)] where n is the number of links
+        # action has the following format: [mu_0, ..., mu_(n-1)]
+        # You can make use of the additional variables:
+        # self.num_links: the number of links
+        # self.joint_viscous_friction: the coefficient of viscous friction
+        # self.link_lengths: an array containing the lengths of all the links
+        # self.link_masses: an array containing the masses of all the links
+
+        
+        # Replace this with your code:
+        return state
+
